@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zahide Quiz</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<iframe
+  src="https://www.youtube.com/embed/co4PVbewN9A?autoplay=1&loop=1&playlist=co4PVbewN9A"
+  allow="autoplay; encrypted-media"
+  style="position: absolute; width: 1px; height: 1px; opacity: 0;"
+></iframe>
+  <!-- Start Page -->
+  <div class="poster" id="start-page">
+    <div class="top-images">
+      <img src="zahide_nr_2.jpg" alt="Left sun" class="left-img">
+      <img src="zahide_nr_3.jpg" alt="Right shape" class="right-img">
+    </div>
+
+    <h1 class="title">HOW<br> MUCH DO<br> YOU<br> KNOW<br>ABOUT<br> ZAHIDE?</h1>
+    <p class="subtitle">PROVE YOU<br> ARE A REAL<br> FAN!</p>
+
+    <div class="divider"></div>
+
+    <h2 class="questions">10 QUESTIONS</h2>
+    <p class="challenge">Can you get 100%?</p>
+
+    <div class="divider"></div>
+
+    <p class="goodluck">Good luck!</p>
+    <button class="starterf" id="start-btn">Start</button>
+  </div>
+
+  <!-- Quiz Container (Questions 1–10) -->
+  <div id="quiz-container" style="display: none;"></div>
+
+  <!-- Results Page -->
+  <div class="poster" id="results-page" style="display:none;">
+    <h1 class="title">Results</h1>
+    <p class="subtitle" id="score-text"></p>
+    <div class="divider"></div>
+    <div id="wrong-answers"></div>
+    <button class="starterb" id="restart-btn">Restart</button>
+  </div>
+
+  <script>
+    const startBtn = document.getElementById('start-btn');
+    const startPage = document.getElementById('start-page');
+    const quizContainer = document.getElementById('quiz-container');
+    const resultsPage = document.getElementById('results-page');
+    const scoreText = document.getElementById('score-text');
+    const wrongAnswersDiv = document.getElementById('wrong-answers');
+    const restartBtn = document.getElementById('restart-btn');
+
+    // Quiz Data
+    const questions = [
+      {
+        img: "Q1.jpg",
+        question: "What has Zahide said?",
+        answers: ["It's my birthday omg!", "Jahaha!", "Look at my watch", "Yeah exactlyyy"],
+        correct: "Jahaha!"
+      },
+      {
+        img: "Q2.jpg",
+        question: "Finish the lyrics: Tamam ihr macht gut...",
+        answers: ["But I ate!", "stop the cap I ate", "better better I did it", "doch Zahide did it better"],
+        correct: "doch Zahide did it better"
+      },
+      {
+        img: "Q3.jpg",
+        question: "Which hair salon does Zahide go to?",
+        answers: ["Abeille-Zubeida", "Haarwerkstatt", "Friseursalon", "Ziya-Friseur"],
+        correct: "Abeille-Zubeida"
+      },
+      {
+        img: "Q4.jpg",
+        question: "What does Zahide do before she dances?",
+        answers: ["Looks down", "Rubs her hands together", "Flips her hair a bit", "Blows a kiss"],
+        correct: "Rubs her hands together"
+      },
+      {
+        img: "Q5.jpg",
+        question: "What does Zahide like saying?",
+        answers: ["Nopeee", "Peace!", "Get outtt bro", "clock it!"],
+        correct: "clock it!"
+      },
+      {
+        img: "Q1.jpg",
+        question: "What car brand does Zahide like?",
+        answers: ["Mercedes", "BMW", "Porche", "Audi"],
+        correct: "BMW"
+      },
+      {
+        img: "zahide_nr_2.jpg",
+        question: "What type of nails does Zahide usually get?",
+        answers: ["Chrome Nails", "Matte Nails", "square French tips nails", "Square Ombre Nails"],
+        correct: "square French tips nails"
+      },
+      {
+        img: "Q8.jpg",
+        question: "What is Zahide’s last name?",
+        answers: ["Kayac", "Kayaci", "Kyc", "Kiyak"],
+        correct: "Kayaci"
+      },
+      {
+        img: "Q7.jpg",
+        question: "Where is Zahide from?",
+        answers: ["England", "Turkey", "Germany", "France"],
+        correct: "Turkey"
+      },
+      {
+        img: "Q10.jpg",
+        question: "How tall is Zahide?",
+        answers: ["163 cm", "170 cm", "168 cm", "172 cm"],
+        correct: "163 cm"
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+    let wrong = [];
+
+    function loadQuestion() {
+      const q = questions[current];
+      quizContainer.innerHTML = `
+        <div class="poster">
+          <img src="${q.img}" alt="Question" class="question-img">
+          <button class="support2">QUESTION ${current + 1}</button>
+          <button class="_2support">${q.question}</button>
+          <div class="options">
+            ${q.answers.map((a) => `
+              <button class="option" onclick="selectAnswer(this, '${a.replace(/'/g, "\\'")}')">${a}</button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    window.selectAnswer = function(button, answer) {
+      const correct = questions[current].correct;
+      const buttons = document.querySelectorAll('.option');
+
+      if (answer === correct) {
+        button.style.backgroundColor = 'green';
+        score++;
+      } else {
+        button.style.backgroundColor = 'red';
+        wrong.push(`Q${current + 1}: ${questions[current].question} (Correct: ${correct})`);
+        buttons.forEach(btn => {
+          if (btn.textContent === correct) {
+            btn.style.backgroundColor = 'green';
+          }
+        });
+      }
+
+      buttons.forEach(b => b.disabled = true);
+
+      setTimeout(() => {
+        current++;
+        if (current < questions.length) {
+          loadQuestion();
+        } else {
+          showResults();
+        }
+      }, 800);
+    };
+
+    function showResults() {
+      quizContainer.style.display = 'none';
+      resultsPage.style.display = 'flex';
+      scoreText.textContent = `You got ${score} / ${questions.length} correct!`;
+      wrongAnswersDiv.innerHTML = wrong.length
+        ? `<p>Wrong Answers:</p><ul>${wrong.map(w => `<li>${w}</li>`).join('')}</ul>`
+        : `<p>Perfect score! 🎉</p>`;
+    }
+
+    startBtn.addEventListener('click', () => {
+      startPage.style.display = 'none';
+      quizContainer.style.display = 'flex';
+      loadQuestion();
+    });
+
+    restartBtn.addEventListener('click', () => {
+      current = 0;
+      score = 0;
+      wrong = [];
+      resultsPage.style.display = 'none';
+      quizContainer.style.display = 'flex';
+      loadQuestion();
+    });
+  </script>
+</body>
+</html>
+
+
