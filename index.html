@@ -4,196 +4,169 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zahide Quiz</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#f5ecd7;--fg:#3a1f14;--primary:#f0731f;--accent:#e8306a;--muted:#7a5a48;--poster:#fbf4e4;--ok:#2fa461;--bad:#e03a2e}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem 1rem;font-family:"Space Grotesk",sans-serif;color:var(--fg);
+      background:radial-gradient(circle at 20% 10%,rgba(240,115,31,.25),transparent 50%),radial-gradient(circle at 80% 90%,rgba(232,48,106,.22),transparent 50%),var(--bg)}
+    .hidden-audio{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;border:0}
+    .poster{width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:.9rem;background:var(--poster);
+      border:3px solid var(--fg);border-radius:1.5rem;padding:2rem 1.75rem 2.25rem;box-shadow:8px 8px 0 var(--fg),0 30px 60px -25px rgba(120,50,10,.45);animation:pop .35s ease-out}
+    .top-images{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;width:100%}
+    .top-images img,.question-img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:1rem;border:3px solid var(--fg);display:block}
+    .question-img{max-width:220px}
+    .title{font-family:Orbitron,sans-serif;font-weight:900;text-transform:uppercase;font-size:clamp(1.8rem,7vw,2.4rem);line-height:1.1;letter-spacing:.02em;color:var(--primary);text-shadow:3px 3px 0 var(--fg);margin-top:.5rem}
+    .subtitle{font-family:Orbitron,sans-serif;font-weight:700;text-transform:uppercase;color:var(--accent);letter-spacing:.08em}
+    .divider{width:60%;height:3px;border-radius:9px;background:linear-gradient(90deg,var(--primary),var(--accent));margin:.25rem 0}
+    .questions{font-family:Orbitron,sans-serif;font-weight:700;font-size:1.5rem;letter-spacing:.1em}
+    .challenge,.goodluck{color:var(--muted);font-weight:500}
+    .btn-main{margin-top:.5rem;font-family:Orbitron,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.15em;padding:.9rem 3rem;border-radius:999px;
+      border:3px solid var(--fg);color:#fff;background:linear-gradient(135deg,var(--primary),var(--accent));box-shadow:4px 4px 0 var(--fg);transition:transform .15s,box-shadow .15s;cursor:pointer;font-size:1rem}
+    .btn-main:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--fg)}
+    .btn-main:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--fg)}
+    .progress{width:100%;height:8px;border-radius:9px;background:rgba(58,31,20,.12);overflow:hidden}
+    .progress span{display:block;height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .4s}
+    .badge{font-family:Orbitron,sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:.4rem 1rem;border-radius:999px;background:var(--fg);color:var(--poster)}
+    .question-text{font-size:1.3rem;font-weight:700;line-height:1.3;min-height:3.4rem;display:flex;align-items:center}
+    .options{display:grid;gap:.65rem;width:100%}
+    .option{width:100%;min-height:3.25rem;padding:.75rem 1rem;border-radius:.9rem;border:3px solid var(--fg);background:var(--poster);color:var(--fg);font-family:inherit;
+      font-weight:600;font-size:1rem;box-shadow:3px 3px 0 var(--fg);transition:transform .12s,background .2s;cursor:pointer}
+    .option:not(:disabled):hover{background:#f8dcc0;transform:translate(-1px,-1px)}
+    .option.is-correct{background:var(--ok);color:#fff}
+    .option.is-wrong{background:var(--bad);color:#fff}
+    .option.is-dim{opacity:.5}
+    .score{font-family:Orbitron,sans-serif;font-weight:900;font-size:4rem;line-height:1}
+    .score small{font-size:1.5rem;color:var(--muted)}
+    .wrong{width:100%;text-align:left}
+    .wrong-head{font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:.8rem;margin-bottom:.5rem;color:var(--bad)}
+    .wrong ul{list-style:none;display:flex;flex-direction:column;gap:.4rem;font-size:.9rem}
+    .wrong li{padding:.55rem .8rem;border-radius:.6rem;background:rgba(224,58,46,.1);border-left:4px solid var(--bad)}
+    .hide{display:none!important}
+    @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+  </style>
 </head>
 <body>
+  <iframe class="hidden-audio" title="music"
+    src="https://www.youtube.com/embed/co4PVbewN9A?autoplay=1&loop=1&playlist=co4PVbewN9A"
+    allow="autoplay; encrypted-media"></iframe>
 
-<iframe
-  src="https://www.youtube.com/embed/co4PVbewN9A?autoplay=1&loop=1&playlist=co4PVbewN9A"
-  allow="autoplay; encrypted-media"
-  style="position: absolute; width: 1px; height: 1px; opacity: 0;"
-></iframe>
   <!-- Start Page -->
-  <div class="poster" id="start-page">
+  <section class="poster" id="start-page">
     <div class="top-images">
-      <img src="zahide_nr_2.jpg" alt="Left sun" class="left-img">
-      <img src="zahide_nr_3.jpg" alt="Right shape" class="right-img">
+      <img src="zahide_nr_2.jpg" alt="Zahide">
+      <img src="zahide_nr_3.jpg" alt="Zahide">
     </div>
-
-    <h1 class="title">HOW<br> MUCH DO<br> YOU<br> KNOW<br>ABOUT<br> ZAHIDE?</h1>
-    <p class="subtitle">PROVE YOU<br> ARE A REAL<br> FAN!</p>
-
+    <h1 class="title">How much do you know about Zahide?</h1>
+    <p class="subtitle">Prove you are a real fan!</p>
     <div class="divider"></div>
-
-    <h2 class="questions">10 QUESTIONS</h2>
+    <h2 class="questions">10 Questions</h2>
     <p class="challenge">Can you get 100%?</p>
-
     <div class="divider"></div>
-
     <p class="goodluck">Good luck!</p>
-    <button class="starterf" id="start-btn">Start</button>
-  </div>
+    <button class="btn-main" id="start-btn">Start</button>
+  </section>
 
-  <!-- Quiz Container (Questions 1–10) -->
-  <div id="quiz-container" style="display: none;"></div>
+  <!-- Quiz -->
+  <div id="quiz-container" class="hide"></div>
 
-  <!-- Results Page -->
-  <div class="poster" id="results-page" style="display:none;">
+  <!-- Results -->
+  <section class="poster hide" id="results-page">
     <h1 class="title">Results</h1>
+    <p class="score" id="score-big"></p>
     <p class="subtitle" id="score-text"></p>
     <div class="divider"></div>
-    <div id="wrong-answers"></div>
-    <button class="starterb" id="restart-btn">Restart</button>
-  </div>
+    <div id="wrong-answers" style="width:100%"></div>
+    <button class="btn-main" id="restart-btn">Restart</button>
+  </section>
 
   <script>
-    const startBtn = document.getElementById('start-btn');
-    const startPage = document.getElementById('start-page');
-    const quizContainer = document.getElementById('quiz-container');
-    const resultsPage = document.getElementById('results-page');
-    const scoreText = document.getElementById('score-text');
-    const wrongAnswersDiv = document.getElementById('wrong-answers');
-    const restartBtn = document.getElementById('restart-btn');
-
-    // Quiz Data
     const questions = [
-      {
-        img: "Q1.jpg",
-        question: "What has Zahide said?",
-        answers: ["It's my birthday omg!", "Jahaha!", "Look at my watch", "Yeah exactlyyy"],
-        correct: "Jahaha!"
-      },
-      {
-        img: "Q2.jpg",
-        question: "Finish the lyrics: Tamam ihr macht gut...",
-        answers: ["But I ate!", "stop the cap I ate", "better better I did it", "doch Zahide did it better"],
-        correct: "doch Zahide did it better"
-      },
-      {
-        img: "Q3.jpg",
-        question: "Which hair salon does Zahide go to?",
-        answers: ["Abeille-Zubeida", "Haarwerkstatt", "Friseursalon", "Ziya-Friseur"],
-        correct: "Abeille-Zubeida"
-      },
-      {
-        img: "Q4.jpg",
-        question: "What does Zahide do before she dances?",
-        answers: ["Looks down", "Rubs her hands together", "Flips her hair a bit", "Blows a kiss"],
-        correct: "Rubs her hands together"
-      },
-      {
-        img: "Q5.jpg",
-        question: "What does Zahide like saying?",
-        answers: ["Nopeee", "Peace!", "Get outtt bro", "clock it!"],
-        correct: "clock it!"
-      },
-      {
-        img: "Q1.jpg",
-        question: "What car brand does Zahide like?",
-        answers: ["Mercedes", "BMW", "Porche", "Audi"],
-        correct: "BMW"
-      },
-      {
-        img: "zahide_nr_2.jpg",
-        question: "What type of nails does Zahide usually get?",
-        answers: ["Chrome Nails", "Matte Nails", "square French tips nails", "Square Ombre Nails"],
-        correct: "square French tips nails"
-      },
-      {
-        img: "Q8.jpg",
-        question: "What is Zahide’s last name?",
-        answers: ["Kayac", "Kayaci", "Kyc", "Kiyak"],
-        correct: "Kayaci"
-      },
-      {
-        img: "Q7.jpg",
-        question: "Where is Zahide from?",
-        answers: ["England", "Turkey", "Germany", "France"],
-        correct: "Turkey"
-      },
-      {
-        img: "Q10.jpg",
-        question: "How tall is Zahide?",
-        answers: ["163 cm", "170 cm", "168 cm", "172 cm"],
-        correct: "163 cm"
-      }
+      { img: "Q1.jpg", question: "What has Zahide said?", answers: ["It's my birthday omg!", "Jahaha!", "Look at my watch", "Yeah exactlyyy"], correct: "Jahaha!" },
+      { img: "Q2.jpg", question: "Finish the lyrics: Tamam ihr macht gut...", answers: ["But I ate!", "stop the cap I ate", "better better I did it", "doch Zahide did it better"], correct: "doch Zahide did it better" },
+      { img: "Q3.jpg", question: "Which hair salon does Zahide go to?", answers: ["Abeille-Zubeida", "Haarwerkstatt", "Friseursalon", "Ziya-Friseur"], correct: "Abeille-Zubeida" },
+      { img: "Q4.jpg", question: "What does Zahide do before she dances?", answers: ["Looks down", "Rubs her hands together", "Flips her hair a bit", "Blows a kiss"], correct: "Rubs her hands together" },
+      { img: "Q5.jpg", question: "What does Zahide like saying?", answers: ["Nopeee", "Peace!", "Get outtt bro", "clock it!"], correct: "clock it!" },
+      { img: "Q1.jpg", question: "What car brand does Zahide like?", answers: ["Mercedes", "BMW", "Porsche", "Audi"], correct: "BMW" },
+      { img: "zahide_nr_2.jpg", question: "What type of nails does Zahide usually get?", answers: ["Chrome Nails", "Matte Nails", "Square French Tips", "Square Ombre Nails"], correct: "Square French Tips" },
+      { img: "Q8.jpg", question: "What is Zahide's last name?", answers: ["Kayac", "Kayaci", "Kyc", "Kiyak"], correct: "Kayaci" },
+      { img: "Q7.jpg", question: "Where is Zahide from?", answers: ["England", "Turkey", "Germany", "France"], correct: "Turkey" },
+      { img: "Q10.jpg", question: "How tall is Zahide?", answers: ["163 cm", "170 cm", "168 cm", "172 cm"], correct: "163 cm" }
     ];
 
-    let current = 0;
-    let score = 0;
-    let wrong = [];
+    const $ = id => document.getElementById(id);
+    const startPage = $('start-page'), quiz = $('quiz-container'), results = $('results-page');
+    let current = 0, score = 0, wrong = [], locked = false;
 
     function loadQuestion() {
       const q = questions[current];
-      quizContainer.innerHTML = `
-        <div class="poster">
-          <img src="${q.img}" alt="Question" class="question-img">
-          <button class="support2">QUESTION ${current + 1}</button>
-          <button class="_2support">${q.question}</button>
-          <div class="options">
-            ${q.answers.map((a) => `
-              <button class="option" onclick="selectAnswer(this, '${a.replace(/'/g, "\\'")}')">${a}</button>
-            `).join('')}
-          </div>
-        </div>
-      `;
+      locked = false;
+      quiz.innerHTML = `
+        <section class="poster">
+          <div class="progress"><span style="width:${(current + 1) / questions.length * 100}%"></span></div>
+          <img src="${q.img}" alt="Question ${current + 1}" class="question-img">
+          <span class="badge">Question ${current + 1} / ${questions.length}</span>
+          <h2 class="question-text"></h2>
+          <div class="options"></div>
+        </section>`;
+      quiz.querySelector('.question-text').textContent = q.question;
+      const opts = quiz.querySelector('.options');
+      q.answers.forEach(a => {
+        const b = document.createElement('button');
+        b.className = 'option';
+        b.textContent = a;
+        b.onclick = () => selectAnswer(b, a);
+        opts.appendChild(b);
+      });
     }
 
-    window.selectAnswer = function(button, answer) {
-      const correct = questions[current].correct;
-      const buttons = document.querySelectorAll('.option');
-
-      if (answer === correct) {
-        button.style.backgroundColor = 'green';
-        score++;
-      } else {
-        button.style.backgroundColor = 'red';
-        wrong.push(`Q${current + 1}: ${questions[current].question} (Correct: ${correct})`);
-        buttons.forEach(btn => {
-          if (btn.textContent === correct) {
-            btn.style.backgroundColor = 'green';
-          }
-        });
-      }
-
-      buttons.forEach(b => b.disabled = true);
-
+    function selectAnswer(button, answer) {
+      if (locked) return;
+      locked = true;
+      const q = questions[current];
+      const buttons = quiz.querySelectorAll('.option');
+      if (answer === q.correct) score++;
+      else wrong.push(`Q${current + 1}: ${q.question} — ${q.correct}`);
+      buttons.forEach(b => {
+        b.disabled = true;
+        if (b.textContent === q.correct) b.classList.add('is-correct');
+        else if (b === button) b.classList.add('is-wrong');
+        else b.classList.add('is-dim');
+      });
       setTimeout(() => {
         current++;
-        if (current < questions.length) {
-          loadQuestion();
-        } else {
-          showResults();
-        }
-      }, 800);
-    };
-
-    function showResults() {
-      quizContainer.style.display = 'none';
-      resultsPage.style.display = 'flex';
-      scoreText.textContent = `You got ${score} / ${questions.length} correct!`;
-      wrongAnswersDiv.innerHTML = wrong.length
-        ? `<p>Wrong Answers:</p><ul>${wrong.map(w => `<li>${w}</li>`).join('')}</ul>`
-        : `<p>Perfect score! 🎉</p>`;
+        current < questions.length ? loadQuestion() : showResults();
+      }, 900);
     }
 
-    startBtn.addEventListener('click', () => {
-      startPage.style.display = 'none';
-      quizContainer.style.display = 'flex';
-      loadQuestion();
-    });
+    function showResults() {
+      quiz.classList.add('hide');
+      results.classList.remove('hide');
+      $('score-big').innerHTML = `${score}<small> / ${questions.length}</small>`;
+      $('score-text').textContent = `You got ${score} out of ${questions.length} correct!`;
+      const box = $('wrong-answers');
+      box.innerHTML = '';
+      if (wrong.length) {
+        box.className = 'wrong';
+        box.innerHTML = '<p class="wrong-head">Wrong answers</p><ul></ul>';
+        const ul = box.querySelector('ul');
+        wrong.forEach(w => { const li = document.createElement('li'); li.textContent = w; ul.appendChild(li); });
+      } else {
+        box.className = '';
+        box.innerHTML = '<p class="goodluck">Perfect score! 🎉</p>';
+      }
+    }
 
-    restartBtn.addEventListener('click', () => {
-      current = 0;
-      score = 0;
-      wrong = [];
-      resultsPage.style.display = 'none';
-      quizContainer.style.display = 'flex';
+    function begin() {
+      current = 0; score = 0; wrong = [];
+      startPage.classList.add('hide');
+      results.classList.add('hide');
+      quiz.classList.remove('hide');
       loadQuestion();
-    });
+    }
+
+    $('start-btn').addEventListener('click', begin);
+    $('restart-btn').addEventListener('click', begin);
   </script>
 </body>
 </html>
-
-
